@@ -1,5 +1,17 @@
 //Website server using Express
 
+//TODO
+  // General
+     // - Test out rewriting sql queries to use success callbacks instead of being nested
+  // Features
+     // - Make dynamic ingredient adder
+     //   + Let them search for existing ingredients to add
+     // - Automatic flavor breakdown / nutrition calculators
+     // - Implement initial setup page
+     // - Let users like/review/favorite recipes
+     // - Meal plan page / recommendation algorithm
+     // - Include ability to add photos for recipe / default photo if none
+
 //Grab packages
 const express = require('express');
 const mysql = require('mysql');
@@ -31,13 +43,14 @@ var connection = mysql.createConnection(dbOptions);
 var sessionStore = new MySQLStore(dbOptions, connection);
 var onlineUsers = []; //Track which users are currently logged in
 
-connection.connect(function(err) {
+//Make sure a connection is established
+connection.connect((err) => {
     if (err) {
-        console.error('Error:- ' + err.stack);
+        console.error('Error: ' + err.stack);
         return;
     }
 
-    console.log('Connected Id:- ' + connection.threadId);
+    console.log('Connection ID: ' + connection.threadId);
 });
 
 //Set up session tracking
@@ -429,19 +442,6 @@ app.get('/addRecipe', (req, res) => {
             err: 'Please log in to add a new recipe'
         });
     }
-});
-
-app.get('/addIngredient', (req,res) =>{
-  if(req.session.loggedin){
-    res.render('addIngredientExample', {
-
-    });
-  }else{
-    res.render('addIngredientExample', {
-        err: 'Please log in to add a new Ingredient'
-    });
-  }
-
 });
 
 // ------------------------------- //
